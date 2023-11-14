@@ -1,54 +1,84 @@
-const button = document.querySelector(".button");
-const ipAddress = document.querySelector(".IP");
-const locayy = document.querySelector(".Locayy");
-const time = document.querySelector(".Time");
-const isp = document.querySelector(".ISp");
+// SEARCH
+const btn = document.querySelector("button");
+const inputIP = document.querySelector("input");
 
-button.addEventListener("click", fetchDetails);
-window.addEventListener("load", fetchDetails);
+// RESULTS
+const displayIP = document.querySelector("#ip");
+const displayLocation = document.querySelector("#location");
+const displayTime = document.querySelector("#time");
+const displayISP = document.querySelector("#isp");
 
-async function fetchDetails() {
-  try {
-    const searchInput = document.getElementById("searchInput");
-    const ipAddressValue = searchInput.value;
+let map, startIP;
 
-    const response = await fetch(
-      `https://geo.ipify.org/api/v2/country?apiKey=at_UZ8BqXw8IPhdMfibRH6FoX1VrWZnN&ipAddress=${ipAddressValue}`
-    );
+window.addEventListener("load", (event) => {
+  testUserIP();
+});
 
-    if (response.ok) {
-      const details = await response.json();
+btn.addEventListener("click", fetchIP);
 
-      ipAddress.innerHTML = `${details.ip}`;
-      locayy.innerHTML = `${
-        details.location.country + "," + details.location.region
-      }`;
-      time.innerHTML = `${details.location.timezone}`;
-      isp.innerHTML = `${details.isp}`;
-    } else {
-      console.error("Error fetching details:", response.statusText);
-      ipAddress.innerHTML = "N/A";
-      locayy.innerHTML = "N/A";
-      time.innerHTML = "N/A";
-      isp.innerHTML = "N/A";
-    }
-  } catch (error) {
-    console.error("Error fetching details:", error);
-    ipAddress.innerHTML = "N/A";
-    locayy.innerHTML = "N/A";
-    time.innerHTML = "N/A";
-    isp.innerHTML = "N/A";
+async function testUserIP() {
+  if (!startIP) {
+    let makeFetchHappen = await fetch("https://api.ipify.org/?format=json");
+    let result = await makeFetchHappen.json();
+    startIP = result.ip;
+    fetchIP(startIP);
+  } else {
+    console.log("move on from this ip you creep");
   }
 }
 
-var map = L.map("map").setView([51.505, -0.09], 13);
+async function fetchIP() {
+  // if you get the value outside of this function on a global scope (at the top, right away on page load), you will get undefined, not the value
+  let ipTest;
 
-L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution:
-    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-}).addTo(map);
+  if (inputIP.value) {
+    ipTest = inputIP.value;
+  } else {
+    ipTest = startIP;
+  }
 
-L.marker([51.5, -0.09])
-  .addTo(map)
-  .bindPopup("A pretty CSS popup.<br> Easily customizable.")
-  .openPopup();
+  const apiK = "at_UtW2ct8oP2PVku8BMGGgy5JqnpB59";
+  let connectionUrl = `https://geo.ipify.org/api/v1?apiKey=${apiK}&ipAddress=${ipTest}`;
+
+  const results = await fetch(connectionUrl);
+  const data = await results.json();
+
+  // coordinates for the map
+  let latlng = L.latLng(data.location.lat, data.location.lng);
+
+  mapIt(latlng);
+
+  displayResults(data);
+}
+
+function mapIt(ltlg) {
+  if (map) {
+    map.off();
+    map.remove();
+  }
+  map = L.map("map").setView(ltlg, 13);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "© OpenStreetMap",
+  }).addTo(map);
+
+  let markerIcon = L.icon({
+    iconUrl:
+      "https://ik.imagekit.io/a8p7pl7hs/sites/icon-location_Q89yew-aI.svg?ik-sdk-version=javascript-1.4.3&updatedAt=1658977365893",
+  });
+
+  let marker = L.marker(ltlg, { icon: markerIcon }).addTo(map);
+}
+
+function displayResults(data) {
+  // get info to display from the data
+  let ip = data.ip;
+  let location = `${data.location.city}, ${data.location.region}, ${data.location.postalCode}`;
+  let timezone = data.location.timezone;
+  let isp = data.isp;
+
+  displayIP.innerText = ip;
+  displayLocation.innerText = location;
+  displayTime.innerText = timezone;
+  displayISP.innerText = isp;
+}

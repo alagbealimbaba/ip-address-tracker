@@ -3,75 +3,89 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IP Address Tracker.</title>
     <link rel="stylesheet" href="./styles.css" />
+
     <link
       rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+      integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+      crossorigin=""
     />
+
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script
+      src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+      integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+      crossorigin=""
+    ></script>
+
+    <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+    <style>
+      .attribution {
+        font-size: 11px;
+        text-align: center;
+      }
+
+      .attribution a {
+        color: hsl(228, 45%, 44%);
+      }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap"
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap"
     />
+
   </head>
+
   <body>
-    <div class="background">
-      <img src="../images/pattern-bg-desktop.png" alt="" />
-      <div id="map" class="map"></div>
-    </div>
+    <main>
+      <section class="head-start">
+        <section id="main-container">
+          <h1>IP Address Tracker</h1>
 
-    <div class="Text">
-      <div class="title">IP Address Tracker</div>
-      <div class="textBox">
-        <input
-          id="searchInput"
-          class="searchBar"
-          type="search"
-          placeholder="Search for any IP address or domain"
-        />
+          <section class="input-ip">
+            <input
+              type="text"
+              placeholder="Search for any IP address or domain"
+            />
+            <button>
+              <img
+                src="https://ik.imagekit.io/a8p7pl7hs/sites/icon-arrow_x5lDvyPjY.svg?ik-sdk-version=javascript-1.4.3&updatedAt=1658977365981"
+                alt="submit ip"
+              />
+            </button>
+          </section>
 
-        <box-icon
-          class="button"
-          name="right-arrow-square"
-          type="solid"
-          flip="horizontal"
-          animation="tada"
-          size="lg"
-        ></box-icon>
-      </div>
-    </div>
-    <div class="detailsArea">
-      <div class="ipAddressBox">
-        <div class="spacing">
-          <h4>IP ADDRESS</h4>
-          <p class="IP"></p>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="location">
-        <div class="spacing">
-          <h4>LOCATION</h4>
-          <p class="Locayy"></p>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="timeZone">
-        <div class="spacing">
-          <h4>TIMEZONE</h4>
-          <p class="Time"></p>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="ISP">
-        <div class="spacing">
-          <h4>ISP</h4>
-          <p class="ISp"></p>
-        </div>
-      </div>
-    </div>
+          <section class="info-container">
+            <section class="bd-gr">
+              <h2>IP Address</h2>
+              <p id="ip" class="result"></p>
+            </section>
 
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+            <section class="bd-gr">
+              <h2>Location</h2>
+              <p id="location" class="result"></p>
+            </section>
+
+            <section class="bd-gr">
+              <h2>Timezone UTC</h2>
+              <p class="result" id="time"></p>
+            </section>
+
+            <section>
+              <h2>ISP</h2>
+              <p class="result" id="isp"></p>
+            </section>
+          </section>
+        </section>
+      </section>
+
+      <div id="map"></div>
+    </main>
+
+    <script src="./script.js"></script>
   </body>
 </html>
